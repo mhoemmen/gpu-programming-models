@@ -14,6 +14,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Compute sum of x and y
+    #pragma acc parallel loop
     for(int i=0; i<n; i++) {
         z[i] = x[i] + y[i];
     }
