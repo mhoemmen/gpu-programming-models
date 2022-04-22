@@ -1,7 +1,11 @@
+#include<algorithm>
 #include<cassert>
+#include<execution>
+#include<functional>
 #include<vector>
 
 int main(int argc, char* argv[]) {
+    using std::execution::par_unseq;
     using std::vector;
 
     const int n = 100'000'000;
@@ -14,9 +18,8 @@ int main(int argc, char* argv[]) {
     }
 
     // Compute sum of x and y
-    for(int i=0; i<n; i++) {
-        z[i] = x[i] + y[i];
-    }
+    std::transform(par_unseq, x.cbegin(), x.cend(), y.cbegin(),
+                   z.begin(), std::plus<>{});
 
     // Assert that the sum is correct
     for(int i=0; i<n; i++) {
