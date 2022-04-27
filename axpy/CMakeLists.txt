@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
 # set the project name
-project(AXPY LANGUAGES CUDA)
+project(AXPY)
 
-# add the executables
-add_executable(axpy main.cu)
-add_executable(thrust_axpy thrust.cu)
+find_package(hip)
+
+# add the executable
+add_executable(axpy main.cpp)
+target_link_libraries(axpy hip::device)

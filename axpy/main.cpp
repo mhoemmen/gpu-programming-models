@@ -1,3 +1,5 @@
+
+#include <hip/hip_runtime.h>
 #include<cassert>
 
 __global__ 
@@ -15,9 +17,9 @@ int main(int argc, char* argv[]) {
     double* h_z = new double[n];
     double *x, *y, *z;
 
-    cudaMalloc(&x, n*sizeof(double));
-    cudaMalloc(&y, n*sizeof(double));
-    cudaMalloc(&z, n*sizeof(double));
+    hipMalloc(&x, n*sizeof(double));
+    hipMalloc(&y, n*sizeof(double));
+    hipMalloc(&z, n*sizeof(double));
 
     // Initialize x and y on the host
     for(int i=0; i<n; i++) {
@@ -26,14 +28,14 @@ int main(int argc, char* argv[]) {
     }
 
     // Copy x and y to device
-    cudaMemcpy(x, h_x, n*sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(y, h_y, n*sizeof(double), cudaMemcpyHostToDevice);
+    hipMemcpy(x, h_x, n*sizeof(double), hipMemcpyHostToDevice);
+    hipMemcpy(y, h_y, n*sizeof(double), hipMemcpyHostToDevice);
 
     // Compute sum of x and y
-    axpy<<<(n+255)/256, 256>>>(n, x, y, z);
+    hipLaunchKernelGGL(axpy, dim3((n+255)/256), dim3(256), 0, 0, n, x, y, z);
 
     // Copy z to host
-    cudaMemcpy(h_z, z, n*sizeof(double), cudaMemcpyDeviceToHost);
+    hipMemcpy(h_z, z, n*sizeof(double), hipMemcpyDeviceToHost);
 
     // Assert that the sum is correct
     for(int i=0; i<n; i++) {
@@ -41,9 +43,9 @@ int main(int argc, char* argv[]) {
     }
 
     delete[] h_x, h_y, h_z;
-    cudaFree(x);
-    cudaFree(y);
-    cudaFree(z);
+    hipFree(x);
+    hipFree(y);
+    hipFree(z);
 
     return 0;
 }
