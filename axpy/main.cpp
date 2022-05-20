@@ -1,11 +1,16 @@
 #include<cassert>
-#include<vector>
+#include "chai/ManagedArray.hpp"
+#include "RAJA/RAJA.hpp"
 
 int main(int argc, char* argv[]) {
-    using std::vector;
+    using chai::ManagedArray;
+    using RAJA::forall;
+    using RAJA::cuda_exec;
+    using RAJA::RangeSegment;
 
     const int n = 1e8;
-    vector<double> x(n), y(n), z(n);
+    const int CUDA_BLOCK_SIZE = 256;
+    chai::ManagedArray<double> x(n), y(n), z(n);
 
     // Initialize x and y
     for(int i=0; i<n; i++) {
@@ -14,9 +19,10 @@ int main(int argc, char* argv[]) {
     }
 
     // Compute sum of x and y
-    for(int i=0; i<n; i++) {
-        z[i] = x[i] + y[i];
-    }
+    forall<cuda_exec<CUDA_BLOCK_SIZE>>(RangeSegment(0, n), 
+        [=] RAJA_DEVICE (int i) { 
+        z[i] = x[i] + y[i]; 
+    });    
 
     // Assert that the sum is correct
     for(int i=0; i<n; i++) {
