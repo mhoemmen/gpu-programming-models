@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.21.0)
 
 # set the project name
-project(AXPY LANGUAGES CUDA CXX)
+project(AXPY LANGUAGES CXX)
 
-find_package(CUDAToolkit REQUIRED)
+# find OneAPI
+find_package(IntelDPCPP REQUIRED)
 
 # add the executable
-add_executable(axpy main.cu)
-target_link_libraries(axpy CUDA::cublas)
+add_executable(axpy main.cpp)
