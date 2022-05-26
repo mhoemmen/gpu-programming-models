@@ -15,6 +15,7 @@ int main(int argc, char* argv[]) {
 
     // Compute dot product
     double sum = 0.0;
+    #pragma omp target parallel for reduction(+:sum)
     for(int i=0; i<n; i++) {
         sum += x[i] * y[i];
     }
