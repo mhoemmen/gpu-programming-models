@@ -3,14 +3,13 @@
 
 module mathOps
   contains
-    attributes(global) subroutine saxpy(x, y, a)
+    attributes(global) subroutine saxpy(x, y, z)
       implicit none
-      real :: x(:), y(:)
-      real, value :: a
+      real :: x(:), y(:), z(:)
       integer :: i, n
       n = size(x)
       i = blockDim%x * (blockIdx%x - 1) + threadIdx%x
-      if (i <= n) y(i) = y(i) + a*x(i)
+      if (i <= n) z(i) = y(i) + x(i)
     end subroutine saxpy 
   end module mathOps
   
@@ -18,18 +17,36 @@ module mathOps
     use mathOps
     use cudafor
     implicit none
-    integer, parameter :: N = 40000
-    real :: x(N), y(N), a
-    real, device :: x_d(N), y_d(N)
+    integer, parameter :: N = 100000000
+    integer :: i
+    real :: x(N), y(N), z(N)
+    real, device :: x_d(N), y_d(N), z_d(N)
     type(dim3) :: grid, tBlock
   
     tBlock = dim3(256,1,1)
     grid = dim3(ceiling(real(N)/tBlock%x),1,1)
+
+    ! Initialize x and y
+    do i = 1, N
+        x(i) = i;
+        y(i) = N - i;
+    end do
   
-    x = 1.0; y = 2.0; a = 2.0
+    ! Copy x and y to device
     x_d = x
     y_d = y
-    call saxpy<<<grid, tBlock>>>(x_d, y_d, a)
-    y = y_d
-    write(*,*) 'Max error: ', maxval(abs(y-4.0))
+
+    ! Compute sum of x and y
+    call saxpy<<<grid, tBlock>>>(x_d, y_d, z_d)
+
+    ! Copy z to host
+    z = z_d
+
+    ! Assert that the sum is correct
+    do i = 1, N
+        if (z(i) .ne. N) then
+            print *, "incorrect sum", i, z(i)
+            call exit(1)
+        end if
+    end do
   end program testSaxpy
