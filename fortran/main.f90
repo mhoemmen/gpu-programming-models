@@ -1,3 +1,5 @@
+! Compile with nvfortran -mp=gpu -Minfo=mp ../main.f90 -o axpy
+
 program summation
     implicit none
     integer, parameter :: n = 100000000
@@ -13,6 +15,7 @@ program summation
     end do
 
     ! Compute sum of x and y
+    !$omp target parallel loop
     do i = 1, n
         z(i) = x(i) + y(i)
     end do
