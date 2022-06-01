@@ -1,3 +1,5 @@
+! Build with nvfortran -o axpy -acc -Minfo ../main.f90
+
 program summation
     implicit none
     integer, parameter :: n = 100000000
@@ -13,6 +15,7 @@ program summation
     end do
 
     ! Compute sum of x and y
+    !$acc parallel loop
     do i = 1, n
         z(i) = x(i) + y(i)
     end do
