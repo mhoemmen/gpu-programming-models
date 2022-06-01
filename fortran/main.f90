@@ -1,3 +1,5 @@
+! Build with nvfortran -stdpar -Minfo=accel ../main.f90 -o axpy
+
 program summation
     implicit none
     integer, parameter :: n = 100000000
@@ -13,7 +15,7 @@ program summation
     end do
 
     ! Compute sum of x and y
-    do i = 1, n
+    do concurrent (i = 1: n)
         z(i) = x(i) + y(i)
     end do
 
