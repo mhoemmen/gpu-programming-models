@@ -12,7 +12,7 @@ extern "C" {
 int main(int argc, char* argv[]) {
     using std::vector;
 
-    const int n = 1e8;
+    const int n = 100'000'000;
     const int ONE = 1;
     const double alpha = 1.0;
     vector<double> x(n), y(n), z(n);

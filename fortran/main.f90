@@ -1,6 +1,6 @@
 program summation
     implicit none
-    integer, parameter :: n = 1e8
+    integer, parameter :: n = 100000000
     integer :: i
     real, dimension(:), allocatable :: x, y, z
 

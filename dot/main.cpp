@@ -4,7 +4,7 @@
 int main(int argc, char* argv[]) {
     using std::vector;
 
-    const int n = 1e8;
+    const int n = 100'000'000;
     vector<double> x(n), y(n);
 
     // Initialize x and y
