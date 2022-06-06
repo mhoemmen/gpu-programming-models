@@ -1,10 +1,17 @@
 #include<cassert>
+#include<execution>
+#include<ranges>
 #include<vector>
 
 int main(int argc, char* argv[]) {
+    using std::execution::par_unseq;
+    using std::for_each;
+    using std::ranges::begin;
+    using std::ranges::end;
+    using std::views::iota;
     using std::vector;
 
-    const int n = 10000;
+    const int n = 1000;
     vector<double> x(n), y(n), A(n*n, 0.0);
 
     // Initialize x
@@ -17,14 +24,17 @@ int main(int argc, char* argv[]) {
         A[i*(n+1)] = 1.0;
     }
 
+    // Generate a range of indices
+    auto rows = iota(0, n);
+
     // Compute matrix-vector product
-    for(int r=0; r<n; r++) {
+    for_each(par_unseq, begin(rows), end(rows), [=,&y](int r) {
         y[r] = 0.0;
         for(int c=0; c<n; c++) {
             // Note that we have hard-coded row-major storage here
             y[r] += A[r*n+c] * x[c];
         }
-    }
+    });
 
     // Assert that the product is correct
     for(int i=0; i<n; i++) {
