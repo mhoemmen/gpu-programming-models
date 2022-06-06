@@ -8,6 +8,7 @@ int main(int argc, char* argv[]) {
     using std::for_each;
     using std::ranges::begin;
     using std::ranges::end;
+    using std::transform_reduce;
     using std::views::iota;
     using std::vector;
 
@@ -29,11 +30,9 @@ int main(int argc, char* argv[]) {
 
     // Compute matrix-vector product
     for_each(par_unseq, begin(rows), end(rows), [=,&y](int r) {
-        y[r] = 0.0;
-        for(int c=0; c<n; c++) {
-            // Note that we have hard-coded row-major storage here
-            y[r] += A[r*n+c] * x[c];
-        }
+        // Note that we have hard-coded row-major storage here
+        y[r] = transform_reduce(par_unseq, x.begin(), x.end(), 
+            A.cbegin() + r*n, 0.0, std::plus{}, std::multiplies{});;
     });
 
     // Assert that the product is correct
