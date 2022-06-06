@@ -1,15 +1,14 @@
+#include<algorithm>
 #include<cassert>
 #include<execution>
-#include<ranges>
+#include<functional>
+#include<numeric>
 #include<vector>
 
 int main(int argc, char* argv[]) {
     using std::execution::par_unseq;
     using std::for_each;
-    using std::ranges::begin;
-    using std::ranges::end;
     using std::transform_reduce;
-    using std::views::iota;
     using std::vector;
 
     const int n = 1000;
@@ -26,13 +25,16 @@ int main(int argc, char* argv[]) {
     }
 
     // Generate a range of indices
-    auto rows = iota(0, n);
+    vector<int> rows(n);
+    for(int i=0; i<n; i++) {
+        rows[i] = i;
+    }
 
     // Compute matrix-vector product
-    for_each(par_unseq, begin(rows), end(rows), [=,&y](int r) {
+    for_each(par_unseq, rows.begin(), rows.end(), [=,&y](int r) {
         // Note that we have hard-coded row-major storage here
         y[r] = transform_reduce(par_unseq, x.begin(), x.end(), 
-            A.cbegin() + r*n, 0.0, std::plus{}, std::multiplies{});;
+            A.cbegin() + r*n, 0.0, std::plus<double>{}, std::multiplies<double>{});;
     });
 
     // Assert that the product is correct

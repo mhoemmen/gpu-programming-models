@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
     // Compute dot product
     double sum = std::transform_reduce(par_unseq,
                           x.begin(), x.end(),
-                          y.begin(), 0.0, std::plus{}, std::multiplies{});
+                          y.begin(), 0.0, std::plus<double>{}, std::multiplies<double>{});
 
     // Assert that the sum is correct
     assert(sum == n);
