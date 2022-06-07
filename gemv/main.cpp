@@ -1,3 +1,5 @@
+// Build with nvcc -o gemv -acc -Minfo ../main.cpp
+
 #include<cassert>
 #include<vector>
 
@@ -18,6 +20,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Compute matrix-vector product
+    #pragma acc parallel loop
     for(int r=0; r<n; r++) {
         y[r] = 0.0;
         for(int c=0; c<n; c++) {

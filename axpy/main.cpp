@@ -1,3 +1,5 @@
+// Build with nvcc -o axpy -acc -Minfo ../main.cpp
+
 #include<cassert>
 #include<vector>
 
