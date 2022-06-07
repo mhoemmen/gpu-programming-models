@@ -1,3 +1,5 @@
+// Build with nvc++ -mp=gpu ../main.cpp -o gemv
+
 #include<cassert>
 #include<vector>
 
@@ -18,6 +20,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Compute matrix-vector product
+    #pragma omp target parallel for
     for(int r=0; r<n; r++) {
         y[r] = 0.0;
         for(int c=0; c<n; c++) {

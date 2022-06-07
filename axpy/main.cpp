@@ -1,3 +1,5 @@
+// Build with nvc++ -mp=gpu ../main.cpp -o axpy
+
 #include<cassert>
 #include<vector>
 
