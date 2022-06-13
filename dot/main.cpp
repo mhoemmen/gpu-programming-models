@@ -1,4 +1,4 @@
-// Build with nvcc -o dot -acc -Minfo ../main.cpp
+// Build with nvc++ -o dot -acc -Minfo ../main.cpp
 
 #include<cassert>
 #include<vector>

@@ -1,4 +1,4 @@
-// Build with nvcc -o gemv -acc -Minfo ../main.cpp
+// Build with nvc++ -o gemv -acc -Minfo ../main.cpp
 
 #include<cassert>
 #include<vector>

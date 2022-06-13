@@ -1,3 +1,5 @@
+// Build with nvcc -o ray -acc -Minfo ../main.cpp
+
 #include<algorithm>
 #include<cassert>
 #include<limits>
@@ -76,6 +78,7 @@ int main(int argc, char* argv[]) {
 
     distances.resize(rays.size());
 
+    #pragma acc parallel loop
     for(int i=0; i<rays.size(); i++) {
         distances[i] = g.intersect(rays[i]);
     }

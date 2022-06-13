@@ -1,4 +1,4 @@
-// Build with nvcc -o axpy -acc -Minfo ../main.cpp
+// Build with nvc++ -o axpy -acc -Minfo ../main.cpp
 
 #include<cassert>
 #include<vector>
