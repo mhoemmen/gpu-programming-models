@@ -5,3 +5,4 @@ project(RAY)
 
 # add the executable
 add_executable(ray main.cpp)
+add_executable(no-virtual-ray no-virtual.cpp)
