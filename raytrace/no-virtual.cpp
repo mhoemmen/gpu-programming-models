@@ -1,5 +1,6 @@
 #include<algorithm>
 #include<cassert>
+#include<execution>
 #include<limits>
 #include<memory>
 #include<vector>
@@ -60,6 +61,8 @@ private:
 };
 
 int main(int argc, char* argv[]) {
+    using std::execution::par_unseq;
+
     Geometry g;
     std::vector<Ray> rays;
     std::vector<double> distances;
@@ -85,9 +88,9 @@ int main(int argc, char* argv[]) {
 
     distances.resize(rays.size());
 
-    for(int i=0; i<rays.size(); i++) {
-        distances[i] = g.intersect(rays[i]);
-    }
+    std::transform(par_unseq, rays.cbegin(), rays.cend(), distances.begin(), [=](const Ray& ray) {
+        return g.intersect(ray);
+    });
 
     assert(distances[0] == 1.0);
     assert(distances[1] == INFINITY);
