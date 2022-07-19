@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
 # set the project name
-project(GEMM)
+project(GEMM LANGUAGES CUDA CXX)
 
 find_package(BLAS REQUIRED)
 
 # add the executable
-add_executable(gemm main.cpp)
+add_executable(gemm main.cu)
 target_link_libraries(gemm ${BLAS_LIBRARIES})
